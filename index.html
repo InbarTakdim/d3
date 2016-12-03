@@ -45,6 +45,16 @@
                                 .enter()
                                 .append("rect");
 
+                svg.selectAll("rects")
+                   .data(dataset)
+                   .enter()
+                   .append("text")
+                   .attr("fill" , "white")
+                   .attr("font-size" , 10)
+                   .attr("x", 55)
+                   .attr("y", function(d,i){return i*20+13;})
+                   .text(function(d){return d.firstName ;});
+
                 rects.attr("x", 100)
                 .attr("y", function(d, i) {
                     return i*20;
@@ -59,8 +69,10 @@
                 })
                 .append("title")
                 .text(function(d) {
-                    return d.finalGrade;
+                    return d.firstName +" " + d.finalGrade;
                 })
+
+
 
             });
 
