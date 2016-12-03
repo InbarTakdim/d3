@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>6</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+        <script src="loadData.js"></script>
+        <style>
+            rect:hover {fill:white;}
+        </style>
+    </head>
+    <body>
+        <h1>load external csv data</h1>
+
+        <script>
+        (function() {
+            var width=1300;
+            var height=600;
+
+            var widthScale = d3.scale.linear()
+                               .domain([0,100])
+                               .range([0,width-400]);
+
+            var color = d3.scale.linear()
+                               .domain([0,100])
+                               .range(["red","green"]);
+
+            var axis=d3.svg.axis().ticks(20).scale(widthScale);
+
+          var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("background","gray");
+
+            d3.csv("data/grades-data.csv", function(dataset) {
+                console.log(dataset);
+                dataset.sort(function(a, b) {
+                    return d3.descending(a.finalGrade, b.finalGrade);
+                });
+
+                var rects = svg.selectAll("rect")
+                                .data(dataset)
+                                .enter()
+                                .append("rect");
+
+                rects.attr("x", 100)
+                .attr("y", function(d, i) {
+                    return i*20;
+                })
+                .attr("width",function(d) {
+                    return widthScale(d.finalGrade);
+                })
+                .attr("height",17)
+                .attr("fill",function(d){return color(d.finalGrade);})
+                .attr("data-name", function(d) {
+                    return d.firstName;
+                })
+                .append("title")
+                .text(function(d) {
+                    return d.finalGrade;
+                })
+
+            });
+
+        svg.append("g")
+            .attr("transform" , "translate(100, 400)")
+            .call(axis);
+        })();
+
+
+       
+        </script>
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> </body>
+</html> 
